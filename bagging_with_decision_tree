@@ -17,6 +17,9 @@ test_data = pd.read_csv('titanikTest.csv', names=['pclass', 'age', 'gender', 'su
 
 print("Training data columns:", train_data.columns.tolist())
 print("Test data columns:", test_data.columns.tolist())
+print(train_data.head())
+print(test_data.head())
+
 
 def bootstrap_samples(data, n_samples):
     samples = [data.sample(n=len(data), replace=True) for _ in range(n_samples)]
@@ -25,7 +28,7 @@ def bootstrap_samples(data, n_samples):
 def build_stumps(data, label):
     trees = []
     for sample in bootstrap_samples(data, 100):
-        stump = DecisionTreeClassifier(max_depth=1)
+        stump = DecisionTreeClassifier(max_depth=3)
         features = sample.drop(columns=[label])
         labels = sample[label]
         stump.fit(features, labels)
@@ -52,3 +55,4 @@ trees = build_stumps(train_data_encoded, 'survived')
 test_predictions = majority_voting(trees, test_data_encoded)
 test_accuracy = evaluate(test_predictions, test_data_encoded['survived'])
 print(f'Accuracy: {test_accuracy * 100:.2f}%')
+ 
